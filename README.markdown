@@ -9,16 +9,16 @@ Add as the first script to your Safari plist file (created by the Extension
 Builder) and your Chrome and Opera manifest files, background pages, and options
 pages.
 
-Then use `chrome.*` APIs as usual and check the global `SAFARI` boolean for
-doing browser-specific stuff. The `safari.*` APIs will still be available in
-Safari and the `chrome.*` APIs unchanged in Chrome and Opera.
-
 Additional modifications for EDGE: 
  * The manifest file needs one additional key:
      "minimum_edge_version": "33.14349.1000.0"
  * You need to set additional permissions on extension directory. Create a .cmd 
    file with this line and run it from inside the extension directory:<br/>
      icacls %CD% /grant "*S-1-15-2-3624051433-2125758914-1423191267-1740899205-1073925389-3782572162-737981194":"(OI)(CI)(WDAC,WO,GE)"  
+
+Then use `chrome.*` APIs as usual and check the global `SAFARI` and `EDGE` boolean for
+doing browser-specific stuff. The `safari.*` APIs will still be available in
+Safari and the `chrome.*` APIs unchanged in Chrome and Opera.
 
 
 ## License
