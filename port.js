@@ -12,10 +12,10 @@
 // your background page, your Chrome manifest.json, and your
 // Safari Info.plist (created by the Extensions Builder).
 //
-// Additionaly modifications for EDGE: 
+// Additional modifications for EDGE: 
 //   The manifest file needs one additional key:
 //     "minimum_edge_version": "33.14349.1000.0"
-//   You need set additional permissions on extension directory. 
+//   You need to set additional permissions on extension directory. 
 //   Create a .cmd file with this line and run it from inside the 
 //   extension directory you want to set permissions on:
 //     icacls %CD% /grant "*S-1-15-2-3624051433-2125758914-1423191267-1740899205-1073925389-3782572162-737981194":"(OI)(CI)(WDAC,WO,GE)"  
@@ -623,6 +623,7 @@ if (SAFARI) {
 }
 
 })(); } // end if (typeof SAFARI == "undefined") { (function() {
+
 //Converting Chrome extension to Edge 
 if (typeof EDGE == "undefined") {
 (function() {
