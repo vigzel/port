@@ -1,30 +1,36 @@
-// Chrome to Safari port
+// Chrome to Safari and EDGE port
 // Author: Michael Gundlach (gundlach@gmail.com)
 //         "cookies", "tabs", "browserAction", "webRequest", "webNavigation",
 //         and additional "extension" API support by
 //         Brian Kennish <byoogle@gmail.com>
+//         EDGE browser extension support by Zeljko Vignjevic <zeljkv@gmail.com>
 // License: GPLv3 as part of adblockforchrome.googlecode.com
 //          or MIT if GPLv3 conflicts with your code's license.
 //
-// Porting library to make Chrome extensions work in Safari.
+// Porting library to make Chrome extensions work in Safari and EDGE.
 // To use: Add as the first script loaded in your Options page,
 // your background page, your Chrome manifest.json, and your
 // Safari Info.plist (created by the Extensions Builder).
 //
-// Then you can use chrome.* APIs as usual, and check the SAFARI
-// global boolean variable to see if you're in Safari or Chrome
-// for doing browser-specific stuff.  The safari.* APIs will 
+// Additionaly modifications for EDGE: 
+//   The manifest file needs one additional key:
+//     "minimum_edge_version": "33.14349.1000.0"
+//   You need set additional permissions on extension directory. 
+//   Create a .cmd file with this line and run it from inside the 
+//   extension directory you want to set permissions on:
+//     icacls %CD% /grant "*S-1-15-2-3624051433-2125758914-1423191267-1740899205-1073925389-3782572162-737981194":"(OI)(CI)(WDAC,WO,GE)"  
+//
+// Then you can use chrome.* APIs as usual, and check the SAFARI/EDGE
+// global boolean variable to see if you're in Safari, Chrome, or EDGE
+// for doing browser-specific stuff. The safari.* APIs will 
 // still be available in Safari, and the chrome.* APIs will be
-// unchanged in Chrome.
+// unchanged in Chrome. 
 
 if (typeof SAFARI == "undefined") {
 (function() {
 
 // True in Safari, false in Chrome.
 SAFARI = (typeof safari !== "undefined");
-
-// Safari 5.0 (533.x.x) with no menu support
-LEGACY_SAFARI = SAFARI && (navigator.appVersion.match(/\sSafari\/(\d+)\./) || [null,0])[1] < 534;
 
 // "localStorage" gets cleared too often in Safari to rely on.
 if (SAFARI) {
@@ -36,8 +42,11 @@ if (SAFARI) {
     options = {}; // fallback if localStorage is unavailable
   }
 }
-
+  
 if (SAFARI) {
+  // Safari 5.0 (533.x.x) with no menu support
+  SAFARI_VERSION = (navigator.appVersion.match(/\sSafari\/(\d+)\./) || [null, 0])[1]; 
+  LEGACY_SAFARI =  SAFARI_VERSION < 534;
 
   var isOnGlobalPage = !!safari.extension.bars;
   var popup;
@@ -505,7 +514,12 @@ if (SAFARI) {
         }
 
         var $n_re = /\$([1-9])/g;
-        var $n_subber = function(_, num) { return args[num - 1]; };
+        var $n_subber = function(_, num) { 
+          try { 
+            return args[num - 1]; 
+          } catch(e){
+            return "";
+          };
 
         var placeholders = {};
         // Fill in $N in placeholders
@@ -609,3 +623,18 @@ if (SAFARI) {
 }
 
 })(); } // end if (typeof SAFARI == "undefined") { (function() {
+//Converting Chrome extension to Edge 
+if (typeof EDGE == "undefined") {
+(function() {
+  EDGE = (typeof msBrowser !== "undefined") || (typeof browser !== "undefined"); 
+  
+  if(EDGE) { 
+    if (typeof msBrowser !== 'undefined') {
+     chrome = msBrowser;
+    }
+    else if (typeof browser != 'undefined')
+    {
+     chrome = browser;
+    }
+  }
+})()} // end if (typeof EDGE == "undefined") { (function() {
